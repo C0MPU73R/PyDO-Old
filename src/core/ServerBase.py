@@ -5,7 +5,7 @@ from direct.showbase.ShowBase import ShowBase
 from direct.directnotify import DirectNotifyGlobal
 from direct.task.Task import Task
 
-from src.util import LogManager
+from src.util.LogManager import LogManager
 
 class ServerBase(ShowBase):
 	notify = DirectNotifyGlobal.directNotify.newCategory("ServerBase")
@@ -18,8 +18,7 @@ class ServerBase(ShowBase):
 		self.hostName = None
 		self.port = None
 
-		# TODO
-		#self.logManager = LogManager()
+		self.logManager = LogManager()
 
 		self.cManager = QueuedConnectionManager()
 		self.cListener = QueuedConnectionListener(self.cManager, 0)
@@ -38,10 +37,12 @@ class ServerBase(ShowBase):
 			taskMgr.add(self._socketReader, 'Connection Reader')
 		else:
 			self.notify.warning("Unable to start server on %s:%d - is the port in use?" % (self.hostName, self.port))
+			self.logManager.writeServerEvent('ServerBase', 'Unable to start server on %s:%d - is the port in use?' % (host, port))
 			sys.exit()
 
 	def _serverStarted(self, host, port):
 		self.notify.warning("Server started on %s:%d" % (host, port))
+		self.logManager.writeServerEvent('ServerBase', 'Server started on %s:%d' % (host, port))
 
 	def _socketListener(self, task):
 		if self.cListener.newConnectionAvailable():
