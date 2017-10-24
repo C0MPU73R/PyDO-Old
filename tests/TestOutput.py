@@ -10,18 +10,19 @@ class LogOutput:
 		self.console = False
 
 	def write(self, message):
-		self.parent.writeServerEvent('Python', message)
+		self.parent.writeTestEvent('Python', message + '\n')
 		if self.console:
-			self.parent.writeServerEvent('Python', message)
+			self.parent.writeTestEvent('Python', message + '\n')
 
 class LogManager:
 
-	def __init__(self):
-		if not os.path.exists('logs/'):
-			os.makedirs('logs')
+	def __init__(self, testName):
+		if not os.path.exists('test_logs/'):
+			os.makedirs('test_logs')
 
+		self.testName = testName
 		self.logSuffix = str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
-		self.logName = 'logs/pydo-' + self.logSuffix + '.log'
+		self.logName = 'test_logs/' + self.testName + '-' + self.logSuffix + '.log'
 
 		self.logFile = open(self.logName, 'a+')
 
@@ -31,7 +32,7 @@ class LogManager:
 		sys.stdout = self.logOutput
 		sys.stderr = self.logError
 
-	def writeServerEvent(self, origin, message):
+	def writeTestEvent(self, origin, message):
 		timeStamp = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-		self.logFile.write(timeStamp + ' - ' + origin + ' : ' + message + '\n')
+		self.logFile.write(timeStamp + ' - ' + origin + ' : ' + message)
 		self.logFile.flush()
