@@ -27,7 +27,7 @@ class ServerBase(ShowBase):
 
 	def start(self):
 		self.hostName = self.configManager.getString('host-name', '127.0.0.1')
-		self.port = self.configManager.getInt('port-number', 4301)
+		self.port = self.configManager.getInt('port-number', 7101)
 
 		self.socket = self.cManager.openTCPServerRendezvous(self.hostName, self.port, 1000)
 		if self.socket:
