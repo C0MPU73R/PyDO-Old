@@ -18,7 +18,7 @@ class ServerBase(ShowBase):
         self.socket = None
         self.hostName = None
         self.port = None
-        self.hostPort = NoneA
+        self.hostPort = None
 
         self.logManager = LogManager()
 
