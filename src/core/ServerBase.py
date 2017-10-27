@@ -1,9 +1,12 @@
 import sys
-from panda3d.core import (QueuedConnectionManager, QueuedConnectionListener, QueuedConnectionReader, ConnectionWriter, 
-                            PointerToConnection, NetAddress, NetDatagram)
+from panda3d.core import (QueuedConnectionManager, QueuedConnectionListener, QueuedConnectionReader, ConnectionWriter,
+                          PointerToConnection, NetAddress, NetDatagram)
 from direct.showbase.ShowBase import ShowBase
 from direct.directnotify import DirectNotifyGlobal
 from direct.task.Task import Task
+from direct.distributed.PyDatagram import PyDatagram
+from direct.distributed.PyDatagramIterator import PyDatagramIterator
+from ServerProtocols import *
 
 from src.util.LogManager import LogManager
 
@@ -16,9 +19,12 @@ class ServerBase(ShowBase):
 
         self.configManager = None
         self.socket = None
+        self.connection = None
+        self.activeConnections = []
         self.hostName = None
         self.port = None
         self.hostPort = None
+        self.ourChannel = 100001
 
         self.logManager = LogManager()
 
@@ -40,8 +46,16 @@ class ServerBase(ShowBase):
             taskMgr.add(self._socketReader, 'Connection Reader')
         else:
             self.notify.warning("Unable to start server on %s:%d - is the port in use?" % (self.hostName, self.port))
-            self.logManager.writeServerEvent('ServerBase', 'Unable to start server on %s:%d - is the port in use?' % (host, port))
+            self.logManager.writeServerEvent('ServerBase', 'Unable to start server on %s:%d - is the port in use?'
+                                             % (self.hostName, self.port))
             sys.exit()
+
+        timeout = 5000
+        self.connection = self.cManager.openTCPClientConnection(self.hostName, self.hostPort, timeout)
+        if self.connection:
+            self.cReader.addConnection(self.connection)
+            self.registerChannel(self.ourChannel)
+            taskMgr.add(self._socketListener, 'Poll the datagram reader')
 
     def _serverStarted(self, host, port):
         self.notify.warning("Server started on %s:%d" % (host, port))
@@ -55,7 +69,7 @@ class ServerBase(ShowBase):
 
             if self.cListener.getNewConnection(rendezvous, netAddress, newConnection):
                 newConnection = newConnection.p()
-                #self.activeConnections.append(newConnection)
+                self.activeConnections.append(newConnection)
                 self.cReader.addConnection(newConnection)
                 self.notify.debug("New Client Connected: %s" % (netAddress))
 
@@ -70,5 +84,21 @@ class ServerBase(ShowBase):
 
         return Task.cont
 
-    def handleDatagram(self, data):
-        self.notify.warning("Received Data: %s" % str(data))
+    def registerChannel(self, channel):
+        dg = PyDatagram()
+        dg.addUint16(CONTROL_SET_CHANNEL)
+        dg.addUint64(channel)
+        self.cWriter.send(dg, self.connection)
+
+    def unregisterChannel(self, channel):
+        dg = PyDatagram()
+        dg.addUint16(CONTROL_REMOVE_CHANNEL)
+        dg.addUint64(channel)
+        self.cWriter.send(dg, self.connection)
+
+    def handleDatagram(self, datagram):
+        connection = datagram.getConnection()
+        dgi = PyDatagramIterator(datagram)
+        message_type = dgi.getUint16()
+
+        self.notify.warning("Received data: %s" % str(datagram))
