@@ -1,6 +1,7 @@
 # PyDO Specific
 logs/
 tests/test_logs/
+stunnel/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

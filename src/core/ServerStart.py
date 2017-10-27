@@ -19,7 +19,7 @@ else:
     from src.core.ServerBase import ServerBase
     __builtin__.base = ServerBase()
 
-__builtin__.base.configManager = configManager
+base.configManager = configManager
 
-base.start()
+base.connectionManager.start()
 base.run()
