@@ -9,9 +9,12 @@ from src.message.MessageManager import MessageManager
 
 class ServerBase(ShowBase):
     notify = DirectNotifyGlobal.directNotify.newCategory("ServerBase")
+    serverVersion = 'pcsv1.0.34.31'
 
     def __init__(self):
         ShowBase.__init__(self)
+
+        self.activeConnections = {}
 
         self.configManager = None
 

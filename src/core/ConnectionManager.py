@@ -4,12 +4,13 @@ from panda3d.core import (QueuedConnectionManager, QueuedConnectionListener, Que
 from direct.directnotify import DirectNotifyGlobal
 from direct.task.Task import Task
 
+from src.client.NetworkedClient import NetworkedClient
+
 
 class ConnectionManager:
     notify = DirectNotifyGlobal.directNotify.newCategory("ConnectionManager")
 
     def __init__(self):
-        self.activeConnections = []
         self.socket = None
         self.hostName = None
         self.port = None
@@ -49,7 +50,7 @@ class ConnectionManager:
 
             if self.cListener.getNewConnection(rendezvous, netAddress, newConnection):
                 newConnection = newConnection.p()
-                self.activeConnections.append(newConnection)
+                base.activeConnections[newConnection] = NetworkedClient()
                 self.cReader.addConnection(newConnection)
                 self.notify.warning("New Unauthed Client Connected: %s" % (netAddress))
 
