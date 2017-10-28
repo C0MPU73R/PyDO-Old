@@ -1,7 +1,12 @@
 # PyDO Specific
 logs/
 tests/test_logs/
+
+# Stunnel Dir - Used to strip SSL from Disney clients
 stunnel/
+
+# Server Dir - The directory where all server code goes
+server/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

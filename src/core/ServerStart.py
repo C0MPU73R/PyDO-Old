@@ -22,4 +22,13 @@ else:
 base.configManager = configManager
 
 base.connectionManager.start()
+
+# TODO: Do this better?
+try:
+	from server.main import main
+	main()
+except:
+	self.notify.warning("Unable to import the main module for server logic. Create a main.py file in the server/ directory!")
+	base.logManager.writeServerEvent('ServerBase', "Unable to import the main module for server logic. Create a main.py file in the server/ directory!")
+
 base.run()

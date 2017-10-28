@@ -1,5 +1,6 @@
 from direct.directnotify import DirectNotifyGlobal
 
+
 class MessageManager:
 	notify = DirectNotifyGlobal.directNotify.newCategory("MessageManager")
 

@@ -11,7 +11,9 @@ base for PyDO) and adds in its own custom handlers.
 
 class LegacyBase(ServerBase):
 
-    def __init__(self):
-        ServerBase.__init__(self)
+	def __init__(self):
+		ServerBase.__init__(self)
 
-        self.messageManager = LegacyMessageManager()
+		self.loginInterface = None
+
+		self.messageManager = LegacyMessageManager()
