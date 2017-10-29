@@ -26,6 +26,8 @@ class LegacyMessageManager:
 			self.handleClientLogin(dgi, connection)
 		elif messageType == CLIENT_ADD_INTEREST:
 			self.handleAddInterest(dgi, connection)
+		elif messageType == CLIENT_OBJECT_UPDATE_FIELD:
+			pass
 		else:
 			self._unimplementedType(messageType)
 
@@ -60,8 +62,9 @@ class LegacyMessageManager:
 			self.notify.warning("Received login message without a set loginInterface")
 			base.logManager.writeServerEvent('MessageManager', "Received login message without a set loginInterface")
 
+	# TODO: Move this to interest manager
 	def handleAddInterest(self, dgi, connection):
-		pass
+		base.interestManager.registerInterest(dgi, connection)
 
 	def _unimplementedType(self, type):
 		self.notify.warning("Unknown Message Type: " + str(type))

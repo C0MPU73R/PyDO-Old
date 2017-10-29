@@ -5,6 +5,7 @@ from direct.directnotify import DirectNotifyGlobal
 from src.util.LogManager import LogManager
 from src.core.ConnectionManager import ConnectionManager
 from src.message.MessageManager import MessageManager
+from src.interest.InterestManager import InterestManager
 
 
 class ServerBase(ShowBase):
@@ -21,3 +22,4 @@ class ServerBase(ShowBase):
         self.logManager = LogManager()
         self.connectionManager = ConnectionManager()
         self.messageManager = MessageManager()
+        self.interestManager = InterestManager()
