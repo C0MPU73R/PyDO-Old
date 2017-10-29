@@ -27,7 +27,7 @@ class LegacyMessageManager:
 		elif messageType == CLIENT_ADD_INTEREST:
 			self.handleAddInterest(dgi, connection)
 		elif messageType == CLIENT_OBJECT_UPDATE_FIELD:
-			pass
+			self.handleUpdateObjectField(dgi, connection)
 		else:
 			self._unimplementedType(messageType)
 
@@ -65,6 +65,13 @@ class LegacyMessageManager:
 	# TODO: Move this to interest manager
 	def handleAddInterest(self, dgi, connection):
 		base.interestManager.registerInterest(dgi, connection)
+
+	def handleUpdateObjectField(self, dgi, connection):
+		objectDoId = dgi.getUint32()
+		fieldId = dgi.getUint16()
+
+		self.notify.warning("Object Update For: %s" % str(objectDoId))
+		self.notify.warning("Field Id: %s" % str(fieldId))
 
 	def _unimplementedType(self, type):
 		self.notify.warning("Unknown Message Type: " + str(type))

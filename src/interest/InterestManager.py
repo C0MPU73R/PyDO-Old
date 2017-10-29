@@ -14,8 +14,9 @@ class InterestManager:
 	def registerInterest(self, dgi, connection):
 		# The structure of an interest is:
 		#	* An Id of the interest
+		#	* A context Id
 		#	* A parent DoId
-		#	* Lastly, a list of zones
+		#	* Lastly, a list of zones to listen into
 
 		interestId = dgi.getUint16()
 		contextId = dgi.getUint32()
@@ -25,6 +26,8 @@ class InterestManager:
 		zones.append(dgi.getUint32())
 
 		self.notify.warning("%s - %s - %s - %s" % (interestId, contextId, parentDoId, zones))
+
+		base.doManager.generateOTPObject(parentDoId, zones[0], 'Test')
 
 		if zones == [3]: #Found shard list interest
 			##Create our PirateDistrict instance
