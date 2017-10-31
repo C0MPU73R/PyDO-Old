@@ -3,6 +3,7 @@ from direct.showbase.ShowBase import ShowBase
 from direct.directnotify import DirectNotifyGlobal
 
 from src.util.LogManager import LogManager
+from src.dclass.DCManager import DCManager
 from src.core.ConnectionManager import ConnectionManager
 from src.message.MessageManager import MessageManager
 from src.distributed.DistributedObjectManager import DistributedObjectManager
@@ -21,6 +22,7 @@ class ServerBase(ShowBase):
         self.configManager = None
 
         self.logManager = LogManager()
+        self.dcManager = DCManager()
         self.connectionManager = ConnectionManager()
         self.messageManager = MessageManager()
         self.doManager = DistributedObjectManager()

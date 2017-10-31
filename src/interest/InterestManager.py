@@ -27,8 +27,6 @@ class InterestManager:
 
 		self.notify.warning("%s - %s - %s - %s" % (interestId, contextId, parentDoId, zones))
 
-		base.doManager.generateOTPObject(parentDoId, zones[0], 'Test')
-
 		if zones == [3]: #Found shard list interest
 			##Create our PirateDistrict instance
 			datagram = PyDatagram()
