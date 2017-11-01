@@ -18,6 +18,28 @@ class DistributedObjectManager:
 		# The Distributed Object Hierarchy
 		self._doHierarchy = DoHierarchy()
 
+		self.serverId = 0
+		self.ourChannel = 0
+
+	def allocateChannel(self):
+		return base.channelAllocator.allocate()
+
+	def send(self, datagram):
+		# Zero-length datagrams might freak out the server.  No point
+		# in sending them, anyway.
+		if datagram.getLength() > 0:
+			base.connectionManager.cWriter.sendDatagram(datagram)
+
+	def getGameDoId(self):
+		return 4617
+
+	def deleteObjectLocation(self, object, parentId, zoneId):
+		# Do not worry about null values
+		if ((parentId is None) or (zoneId is None) or (parentId == zoneId == 0)):
+			return
+
+		self._doHierarchy.deleteObjectLocation(object, parentId, zoneId)
+
 	def storeObjectLocation(self, object, parentId, zoneId):
 		oldParentId = object.parentId
 		oldZoneId = object.zoneId
