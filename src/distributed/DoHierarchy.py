@@ -62,15 +62,12 @@ class DoHierarchy:
     def storeObjectLocation(self, do, parentId, zoneId):
         doId = do.doId
         if doId in self._allDoIds:
-            self.notify.error(
-                'storeObjectLocation(%s %s) already in _allDoIds; duplicate generate()? or didn\'t clean up previous instance of DO?' % (
-                do.__class__.__name__, do.doId))
+            self.notify.warning('storeObjectLocation(%s %s) already in _allDoIds; duplicate generate()? or didn\'t clean up previous instance of DO?' % (do.__class__.__name__, do.doId))
         parentZoneDict = self._table.setdefault(parentId, {})
         zoneDoSet = parentZoneDict.setdefault(zoneId, set())
         zoneDoSet.add(doId)
         self._allDoIds.add(doId)
-        self.notify.debug('storeObjectLocation: %s(%s) @ (%s, %s)' % (
-            do.__class__.__name__, doId, parentId, zoneId))
+        self.notify.warning('storeObjectLocation: %s(%s) @ (%s, %s)' % (do.__class__.__name__, doId, parentId, zoneId))
 
     def deleteObjectLocation(self, do, parentId, zoneId):
         doId = do.doId
